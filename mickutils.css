@@ -1,0 +1,54 @@
+.full, .fulw, *[full], *[fulw] {width: 100%}
+.full, .fulh, *[full], *[fulh] {height: 100%}
+
+.flex, .flexc, .flexcc, .flexccc, *[flex], *[flexc], *[flexcc], *[flexccc] {display: flex}
+.flexcc, .flexccc, *[flexcc], *[flexccc] {align-items: center; justify-content: center}
+.flexc, .flexccc, *[flexc], *[flexccc] {flex-direction: column}
+
+.centr, *[centr] {align-items: center}
+.between, *[between] {justify-content: space-between}
+.middle, *[middle] {justify-content: center}
+
+.gap5, *[gap5] {gap: 5px}
+.gap10, *[gap10] {gap: 10px}
+
+.posa, *[posa] {position: absolute}
+.posr, *[posr] {position: relative}
+
+.ovra, *[ovra] {overflow: auto}
+.ovrh, *[ovrh] {overflow: hidden}
+
+.pad10, *[pad10] {padding: 10px}
+.padv10, *[padv10] {padding-block: 10px}
+.padh10, *[padh10] {padding-inline: 10px}
+.padv5, *[padv5] {padding-block: 5px}
+
+.margv5, *[margv5] {margin-block: 5px}
+
+.size40, *[size40] {min-width: 40px; width: 40px; height: 40px}
+
+.hide, *[hide] {display: none}
+
+.noreact, *[noreact] {pointer-events: none}
+
+.pointer, *[pointer] {cursor: pointer}
+
+.c000, *[c000] {color: black}
+.cfff, *[cfff] {color: white}
+.cgrey, *[cgrey] {color: grey}
+.b000, *[b000] {background-color: black}
+.bfff, *[bfff] {background-color: white}
+.bsmoke, *[bsmoke] {background-color: whitesmoke}
+
+.font13, *[font13] {font-size: .8125rem}
+.font14, *[font14] {font-size: .875rem}
+.font14, *[font14] {font-size: .875rem}
+.font18, *[font18] {font-size: 1.25rem}
+.font20, *[font20] {font-size: 1.25rem}
+
+.ellips *, *[ellips] * {overflow: hidden; white-space: nowrap; text-overflow: ellipsis}
+
+.modal {position: fixed; left: 0; top: 0; overflow: hidden; background-color: rgba(0,0,0,.0); transition: background-color .15s ease-in; z-index: 9999; transition-delay: .15s}
+.modal > * {border-radius: 18px; padding: 10px; max-height: 95vh; overflow-y: auto; background: white; box-shadow: 0 0 15px rgb(0,0,0,.33); transition: transform .15s ease-in; transform: scale(0); transition-delay: 0s}
+.modalshow {background-color: rgba(0,0,0,.33); transition-delay: 0s}
+.modalshow > DIV {transform: scale(1); transition-delay: .15s}
