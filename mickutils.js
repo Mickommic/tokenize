@@ -47,7 +47,7 @@ function tokenize(a, b, c, d, e){
 					if((i = h.indexOf('-')) > 1){
 						const j = h.slice(i + 1)
 
-						if(f = window[j])
+						if(f = b[j] || window[j])
 							f = new f(a, g.value, b, e)
 						else
 							console.error('Объект "' + j + '" (из атрибута "' + h + '") отсутствует в глобальном контексте!')
