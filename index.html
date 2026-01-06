@@ -1,10 +1,10 @@
 <html>
-		<head>
-				<meta charset="UTF-8">
-				<title>Тест</title>
-				<script type="text/javascript" src="mickutils.js"></script>
-				<link rel="stylesheet" type="text/css" href="mickutils.css"/>
-				<style>
+	<head>
+		<meta charset="UTF-8">
+		<title>Тест</title>
+		<script type="text/javascript" src="mickchat/utils.js"></script>
+		<link rel="stylesheet" type="text/css" href="mickchat/utils.css"/>
+		<style>
 * {box-sizing: border-box}
 BODY {font: 1em Roboto Variable,Segoe UI,Helvetica Neue,Helvetica,Lucida Grande,Arial,Ubuntu,Cantarell,Fira Sans,sans-serif; color: #0a0a0a; margin: 0}
 BUTTON {background: none; outline: 0; border: 0; padding: 0; cursor: pointer}
@@ -70,205 +70,216 @@ BUTTON {background: none; outline: 0; border: 0; padding: 0; cursor: pointer}
 .nyycheck:has(input:checked) {border: solid 2px mediumseagreen; background: mediumseagreen}
 .nyycheck:has(input:checked):after {background: white; left: 19px; width: 16px; height: 16px; top: 2px}
 .nyycheck:has(input:checked):hover:after {left: 16px; width: 19px}
-				</style>
-				<script>
+		</style>
+		<script>
 function calendar(a, b){
-		const t = this
-		let d, y, m, k, g = 0
+	const t = this
+	let y, m, k, g = 0
+	t.D = new Date()
 
-		a.innerHTML = `
+	a.innerHTML = `
 <input ^i fulw value="` + (b || '') + `" type="search" placeholder="` + (a.getAttribute('ph') || '') + `">
 <a ^a>📅</a>
 <div ^d flexc posa bfff class="calenda" style="display: none">
-		<span flex between>
-				<a ^p></a>
-				<b ^c></b>
-				<a ^n></a>
-		</span>
-		<hr>
-		<div ^g></div>
+	<span flex between>
+		<a ^p></a>
+		<b ^c></b>
+		<a ^n></a>
+	</span>
+	<hr>
+	<div ^g></div>
 </div>
 `
-		tokenize(a, t)
+	tokenize(a, t)
 
-		getDays = (m, y) => {
-				return ([31, y % 4 ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])[m]
+	parse = () => {
+		d = new Date(t.i.value.replace(/(\d{2}).(\d{2}).(\d{4})/, '$3-$2-$1'))
+
+		if(isNaN(d)) d = new Date()
+
+		t.D.setTime(d.getTime())
+	}
+
+	parse()
+
+	getDays = (m, y) => {
+		return ([31, y % 4 ? 28 : 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31])[m]
+	}
+
+	cdate = e => {
+		if((e = parseInt(e.target.innerText)) > 0){
+			d.setDate(e)
+			t.i.value = d.toLocaleDateString()
 		}
 
-		cdate = e => {
-				if((e = parseInt(e.target.innerText)) > 0){
-						d.setDate(e)
-						t.i.value = d.toLocaleDateString()
+		t.D.setTime(d.getTime())
+		t.hide()
+	}
+
+	pdate = e => {
+		d.setMonth(d.getMonth() - 1)
+		cdate(e)
+	}
+
+	ndate = e => {
+		d.setMonth(d.getMonth() + 1)
+		cdate(e)
+	}
+
+	cmonth = e => {
+		if((e = e.target.getAttribute('value')) >= 0){
+			d.setMonth(e)
+			draw(g-1)
+		}
+	}
+
+	cyear = e => {
+		if((e = e.target.innerText) >= 0){
+			d.setYear(e)
+			draw(g-1)
+		}
+	}
+
+	draw = a => {
+		t.g.innerHTML = ''
+		const x = d.getFullYear()
+		const n = d.getMonth()
+
+		switch(g = a){
+			case 0:
+				t.g.className = 'grid0'
+				const p = getDays((n + 11) % 12, x)
+				const c = getDays(n, x)
+				d.setDate(1)
+				let j = (d.getDay() + 6) % 7
+
+				t.c.innerHTML = x + '<br>' + d.toLocaleDateString(0, {month: 'long'})
+				d.setDate(0)
+				t.p.innerHTML = d.toLocaleDateString(0, {month: 'long'})
+				d.setDate(65)
+				t.n.innerHTML = d.toLocaleDateString(0, {month: 'long'})
+				d.setDate(-25)
+				t.g.innerHTML = '<a>Пн</a><a>Вт</a><a>Ср</a><a>Чт</a><a>Пт</a><a>Сб</a><a>Вс</a>'
+
+				t.p.onclick = e => {
+					d.setMonth(n - 1)
+					draw(g)
 				}
 
-				t.hide()
-		}
-
-		pdate = e => {
-				d.setMonth(d.getMonth() - 1)
-				cdate(e)
-		}
-
-		ndate = e => {
-				d.setMonth(d.getMonth() + 1)
-				cdate(e)
-		}
-
-		cmonth = e => {
-				if((e = e.target.getAttribute('value')) >= 0){
-						d.setMonth(e)
-						draw(g-1)
-				}
-		}
-
-		cyear = e => {
-				if((e = e.target.innerText) >= 0){
-						d.setYear(e)
-						draw(g-1)
-				}
-		}
-
-		draw = a => {
-				t.g.innerHTML = ''
-				const x = d.getFullYear()
-				const n = d.getMonth()
-
-				switch(g = a){
-						case 0:
-								t.g.className = 'grid0'
-								const p = getDays((n + 11) % 12, x)
-								const c = getDays(n, x)
-								d.setDate(1)
-								let j = (d.getDay() + 6) % 7
-
-								t.c.innerHTML = x + '<br>' + d.toLocaleDateString(0, {month: 'long'})
-								d.setDate(0)
-								t.p.innerHTML = d.toLocaleDateString(0, {month: 'long'})
-								d.setDate(65)
-								t.n.innerHTML = d.toLocaleDateString(0, {month: 'long'})
-								d.setDate(-25)
-								t.g.innerHTML = '<a>Пн</a><a>Вт</a><a>Ср</a><a>Чт</a><a>Пт</a><a>Сб</a><a>Вс</a>'
-
-								t.p.onclick = e => {
-										d.setMonth(n - 1)
-										draw(g)
-								}
-
-								t.n.onclick = e => {
-										d.setMonth(n + 1)
-										draw(g)
-								}
-
-								if(j)
-										for(let i = p - j + 1; i <= p; i++)
-												el(i, t.g, 0, 'a').onclick = pdate
-
-								for(let i = 1; i <= c; i++)
-										el(i, t.g, x == y && n == m && i == k ? 'bsmoke' : '', 'b').onclick = cdate
-
-								if(j = (c + j) % 7){
-										j = 7 - j
-
-										for(let i = 1; i <= j; i++)
-												el(i, t.g, 0, 'a').onclick = ndate
-								}
-
-								break
-						case 1:
-								t.g.className = 'grid1'
-								t.c.innerHTML = x
-								t.p.innerHTML = x - 1
-								t.n.innerHTML = x + 1
-
-								t.p.onclick = e => {
-										d.setYear(x - 1)
-										draw(g)
-								}
-
-								t.n.onclick = e => {
-										d.setYear(x + 1)
-										draw(g)
-								}
-
-								for(let i = 0; i < 12; i++){
-										d.setMonth(i)
-										const b = el(d.toLocaleDateString(0, {month: 'long'}), t.g, x == y && i == m ? 'bsmoke' : '', 'b')
-										b.setAttribute('value', i)
-										b.onclick = cmonth
-								}
-
-								break
-						case 2:
-								t.g.className = 'grid1'
-								t.c.innerHTML = (x - 11) + '-' + x
-								t.p.innerHTML = (x - 23) + '-' + (x - 12)
-								t.n.innerHTML = (x + 1) + '-' + (x + 12)
-
-								t.p.onclick = e => {
-										d.setYear(x - 12)
-										draw(g)
-								}
-
-								t.n.onclick = e => {
-										d.setYear(x + 12)
-										draw(g)
-								}
-
-								for(let i = x - 11; i <= x; i++)
-										el(i, t.g, i == y ? 'bsmoke' : '', 'b').onclick = cyear
-				}
-		}
-
-		t.i.oninput = e => {
-				const i = t.i.selectionEnd
-				e = t.i.value.replace(/\D/g, '').slice(0, 8).match(/\d{1,2}/g)
-
-				if(e){
-						if(e.length > 3) e[2] += e.splice(3, 1)
-
-						if(e.length > 2 && e[2].length > 3){
-								if(e[1] > 12) e[1] = 12
-
-								e[0] = clip(e[0], getDays(e[1] - 1, e[2])).toString().padStart(2, '0')
-						}
-
-						t.i.value = e.join('.')
+				t.n.onclick = e => {
+					d.setMonth(n + 1)
+					draw(g)
 				}
 
-				t.i.selectionEnd = i + (i == 3 || i == 6 ? 1 : 0)
+				if(j)
+					for(let i = p - j + 1; i <= p; i++)
+						el(i, t.g, 0, 'a').onclick = pdate
+
+				for(let i = 1; i <= c; i++)
+					el(i, t.g, x == y && n == m && i == k ? 'bsmoke' : '', 'b').onclick = cdate
+
+				if(j = (c + j) % 7){
+					j = 7 - j
+
+					for(let i = 1; i <= j; i++)
+						el(i, t.g, 0, 'a').onclick = ndate
+				}
+
+				break
+			case 1:
+				t.g.className = 'grid1'
+				t.c.innerHTML = x
+				t.p.innerHTML = x - 1
+				t.n.innerHTML = x + 1
+
+				t.p.onclick = e => {
+					d.setYear(x - 1)
+					draw(g)
+				}
+
+				t.n.onclick = e => {
+					d.setYear(x + 1)
+					draw(g)
+				}
+
+				for(let i = 0; i < 12; i++){
+					d.setMonth(i)
+					const b = el(d.toLocaleDateString(0, {month: 'long'}), t.g, x == y && i == m ? 'bsmoke' : '', 'b')
+					b.setAttribute('value', i)
+					b.onclick = cmonth
+				}
+
+				break
+			case 2:
+				t.g.className = 'grid1'
+				t.c.innerHTML = (x - 11) + '-' + x
+				t.p.innerHTML = (x - 23) + '-' + (x - 12)
+				t.n.innerHTML = (x + 1) + '-' + (x + 12)
+
+				t.p.onclick = e => {
+					d.setYear(x - 12)
+					draw(g)
+				}
+
+				t.n.onclick = e => {
+					d.setYear(x + 12)
+					draw(g)
+				}
+
+				for(let i = x - 11; i <= x; i++)
+					el(i, t.g, i == y ? 'bsmoke' : '', 'b').onclick = cyear
+		}
+	}
+
+	t.i.oninput = e => {
+		const i = t.i.selectionEnd
+		e = t.i.value.replace(/\D/g, '').slice(0, 8).match(/\d{1,2}/g)
+
+		if(e){
+			if(e.length > 3) e[2] += e.splice(3, 1)
+
+			if(e.length > 2 && e[2].length > 3){
+				if(e[1] > 12) e[1] = 12
+
+				e[0] = clip(e[0], getDays(e[1] - 1, e[2])).toString().padStart(2, '0')
+			}
+
+			t.i.value = e.join('.')
 		}
 
-		t.d.onclick = e => {
-				e.preventDefault()
-				e.stopPropagation()
-		}
+		t.i.selectionEnd = i + (i == 3 || i == 6 ? 1 : 0)
+	}
 
-		t.c.onclick = e => {
-				if(g < 2) draw(g + 1)
-		}
+	t.d.onclick = e => {
+		e.preventDefault()
+		e.stopPropagation()
+	}
 
-		t.show = t.a.onclick = e => {
-				e.preventDefault()
-				e.stopPropagation()
+	t.c.onclick = e => {
+		if(g < 2) draw(g + 1)
+	}
 
-				if(popobj) popobj.hide(e)
+	t.show = t.a.onclick = e => {
+		e.preventDefault()
+		e.stopPropagation()
 
-				popobj = t
-				d = new Date(t.i.value.replace(/(\d{2}).(\d{2}).(\d{4})/, '$3-$2-$1'))
+		if(popobj) popobj.hide(e)
 
-				if(isNaN(d)) d = new Date()
+		popobj = t
 
-				y = d.getFullYear()
-				m = d.getMonth()
-				k = d.getDate()
-				draw(0)
-				t.d.style.display = ''
-		}
+		parse()
 
-		t.hide = () => {
-				t.d.style.display = 'none'
-				popobj = null
-		}
+		y = d.getFullYear()
+		m = d.getMonth()
+		k = d.getDate()
+		draw(0)
+		t.d.style.display = ''
+	}
+
+	t.hide = () => {
+		t.d.style.display = 'none'
+		popobj = null
+	}
 }
 
 function menubtn(a, b, c, d){
@@ -281,56 +292,56 @@ function menubtn(a, b, c, d){
 		app.tab[c.selected = b].checked = r.checked = true
 	}
 }
-				</script>
-		</head>
-		<body full style="padding: 50px">
-				<div *menu class="menu">
-						<button *a[]-menubtn="0">Пример 1 (поле ввода даты)</button>
-						<button *a[]-menubtn="1">Пример 2 (контекстное меню)</button>
-						<button *a[]-menubtn="2">Пример 3 (модальное окно)</button>
-				</div>
-				<div class="tab">
-						<input ^tab[] type="radio" name="tabs" hidden>
-						<div *tab0 fulw>
-								<div *date-calendar="02.04.1968" flex posr class="datediv" ph="Дату мне! Дату!"></div>
-								<br>
-								<button ^button hsmoke pad10>Открыть календарь выше</button>
-						</div>
-				</div>
-				<div class="tab">
-						<input ^tab[] type="radio" name="tabs" hidden>
-						<div *tab1 flex fulw>
-								<div ^div0 fulw>Контекстное меню с изменяемыми кнопками</div>
-								<div ^div1 fulw>То же самое контекстное меню с изменёнными кнопками</div>
-								<div ^div2 fulw>Статичное контекстное меню с неизменяемыми кнопками</div>
-								<div ^div3 fulw>Динамическое контекстное меню</div>
-						</div>
-				</div>
-				<div class="tab">
-						<input ^tab[] type="radio" name="tabs" hidden>
-						<div *tab2 flex fulw>
-								<button ^button hsmoke pad10>Модальное окно</button>
-						</div>
-				</div>
+		</script>
+	</head>
+	<body full style="padding: 50px">
+		<div *menu class="menu">
+			<button *a[]-menubtn="0">Пример 1 (поле ввода даты)</button>
+			<button *a[]-menubtn="1">Пример 2 (контекстное меню)</button>
+			<button *a[]-menubtn="2">Пример 3 (модальное окно)</button>
+		</div>
+		<div class="tab">
+			<input ^tab[] type="radio" name="tabs" hidden>
+			<div *tab0 fulw>
+				<div *date-calendar="02.04.1968" flex posr class="datediv" ph="Дату мне! Дату!"></div>
+				<br>
+				<button ^button hsmoke pad10>Открыть календарь выше</button>
+			</div>
+		</div>
+		<div class="tab">
+			<input ^tab[] type="radio" name="tabs" hidden>
+			<div *tab1 flex fulw>
+				<div ^div0 fulw>Контекстное меню с изменяемыми кнопками</div>
+				<div ^div1 fulw>То же самое контекстное меню с изменёнными кнопками</div>
+				<div ^div2 fulw>Статичное контекстное меню с неизменяемыми кнопками</div>
+				<div ^div3 fulw>Динамическое контекстное меню</div>
+			</div>
+		</div>
+		<div class="tab">
+			<input ^tab[] type="radio" name="tabs" hidden>
+			<div *tab2 flex fulw>
+				<button ^button hsmoke pad10>Модальное окно</button>
+			</div>
+		</div>
 
-				<div *popa-popmenu flexc class="popmenu pop">
-						<button *un><a ^a></a><b ^b></b></button>
-						<button *deux><a ^a></a><b ^b></b></button>
-						<button *trois><a ^a></a><b ^b></b></button>
-						<button *quatre><a ^a></a><b ^b></b></button>
-						<hr>
-						<button *cinq red><a ^a></a><b ^b></b></button>
-				</div>
-				<div *popb-popmenu flexc class="popmenu pop">
-						<button ^ichi><a>🕕</a><b>Ещё пять минут</b></button>
-						<button ^ni><a>🕡</a><b>Ладно. Встаю</b></button>
-						<button ^san><a>🕗</a><b>Доброе утро! Коллеги</b></button>
-						<button ^shi><a>🕧</a><b>Пора бы уже пообедать</b></button>
-						<button ^go><a>🕔</a><b>Уже пять минут как ушёл</b></button>
-				</div>
-				<div *popc-popmenu flexc class="popmenu pop"></div>
+		<div *popa-popmenu flexc class="popmenu pop">
+			<button *un><a ^a></a><b ^b></b></button>
+			<button *deux><a ^a></a><b ^b></b></button>
+			<button *trois><a ^a></a><b ^b></b></button>
+			<button *quatre><a ^a></a><b ^b></b></button>
+			<hr>
+			<button *cinq red><a ^a></a><b ^b></b></button>
+		</div>
+		<div *popb-popmenu flexc class="popmenu pop">
+			<button ^ichi><a>🕕</a><b>Ещё пять минут</b></button>
+			<button ^ni><a>🕡</a><b>Ладно. Встаю</b></button>
+			<button ^san><a>🕗</a><b>Доброе утро! Коллеги</b></button>
+			<button ^shi><a>🕧</a><b>Пора бы уже пообедать</b></button>
+			<button ^go><a>🕔</a><b>Уже пять минут как ушёл</b></button>
+		</div>
+		<div *popc-popmenu flexc class="popmenu pop"></div>
 
-				<script>
+		<script>
 document.body.onclick = e => {if(popobj) popobj.hide(e)}
 
 const app = tokenize(document.body)
@@ -340,125 +351,125 @@ app.menu.a[0].click()
 app.tab0.button.onclick = app.tab0.date.show
 
 app.tab2.button.onclick = e => {
-		const m = new modal('<button ^button hsmoke pad10>Поп кликом</button>', 'padding: 50px', '', n => {
-				const p = new modal('<p>Вы уверены, что, хотите закрыть?</p><button ^button hsmoke pad10>Уверен</button>', 'padding: 50px')
+	const m = new modal('<button ^button hsmoke pad10>Поп кликом</button>', 'padding: 50px', '', n => {
+		const p = new modal('<p>Вы уверены, что, хотите закрыть?</p><button ^button hsmoke pad10>Уверен</button>', 'padding: 50px')
 
-				p.button.onclick = e => {
-						p.close()
-						m.close(1)
-				}
+		p.button.onclick = e => {
+			p.close()
+			m.close(1)
+		}
 
-				return true
-		})
+		return true
+	})
 
-		m.button.onclick = e => app.popb.show(m.button, e)
+	m.button.onclick = e => app.popb.show(m.button, e)
 }
 
 app.tab1.div0.oncontextmenu = e => {
-		log = e => console.log(e.target.innerText)
+	log = e => console.log(e.target.innerText)
 
-		app.popa.show(0, e, m => {
-				m.un.a.innerHTML = '🐵'
-				m.un.b.innerHTML = 'Предок Дарвина'
-				m.un._.onclick = log
+	app.popa.show(0, e, m => {
+		m.un.a.innerHTML = '🐵'
+		m.un.b.innerHTML = 'Предок Дарвина'
+		m.un._.onclick = log
 
-				m.deux.a.innerHTML = '🐘'
-				m.deux.b.innerHTML = 'PHP (без него никуда)'
-				m.deux._.onclick = log
+		m.deux.a.innerHTML = '🐘'
+		m.deux.b.innerHTML = 'PHP (без него никуда)'
+		m.deux._.onclick = log
 
-				m.trois.a.innerHTML = '🦔'
-				m.trois.b.innerHTML = 'Колючка'
-				m.trois._.onclick = log
+		m.trois.a.innerHTML = '🦔'
+		m.trois.b.innerHTML = 'Колючка'
+		m.trois._.onclick = log
 
-				m.quatre.a.innerHTML = '🐧'
-				m.quatre.b.innerHTML = 'Linux (чтоб его...)'
-				m.quatre._.onclick = log
+		m.quatre.a.innerHTML = '🐧'
+		m.quatre.b.innerHTML = 'Linux (чтоб его...)'
+		m.quatre._.onclick = log
 
-				m.cinq.a.innerHTML = '🦁'
-				m.cinq.b.innerHTML = 'Просто Царь'
-				m.cinq._.onclick = log
-		})
+		m.cinq.a.innerHTML = '🦁'
+		m.cinq.b.innerHTML = 'Просто Царь'
+		m.cinq._.onclick = log
+	})
 }
 
 app.tab1.div1.oncontextmenu = e => {
-		log = e => console.log(e.target.innerText)
+	log = e => console.log(e.target.innerText)
 
-		app.popa.show(0, e, m => {
-				m.un.a.innerHTML = '🦘'
-				m.un.b.innerHTML = 'Сумка'
-				m.un._.onclick = log
+	app.popa.show(0, e, m => {
+		m.un.a.innerHTML = '🦘'
+		m.un.b.innerHTML = 'Сумка'
+		m.un._.onclick = log
 
-				m.deux.a.innerHTML = '🐬'
-				m.deux.b.innerHTML = 'MySQL (а мне нравится)'
-				m.deux._.onclick = log
+		m.deux.a.innerHTML = '🐬'
+		m.deux.b.innerHTML = 'MySQL (а мне нравится)'
+		m.deux._.onclick = log
 
-				m.trois.a.innerHTML = '🕊'
-				m.trois.b.innerHTML = 'Мир вашему дому'
-				m.trois._.onclick = log
+		m.trois.a.innerHTML = '🕊'
+		m.trois.b.innerHTML = 'Мир вашему дому'
+		m.trois._.onclick = log
 
-				m.quatre.a.innerHTML = '🦊'
-				m.quatre.b.innerHTML = 'FireFox (не сдаётся)'
-				m.quatre._.onclick = log
+		m.quatre.a.innerHTML = '🦊'
+		m.quatre.b.innerHTML = 'FireFox (не сдаётся)'
+		m.quatre._.onclick = log
 
-				m.cinq.a.innerHTML = '🦙'
-				m.cinq.b.innerHTML = 'Искусственный интеллект'
-				m.cinq._.onclick = log
-		})
+		m.cinq.a.innerHTML = '🦙'
+		m.cinq.b.innerHTML = 'Искусственный интеллект'
+		m.cinq._.onclick = log
+	})
 }
 
 app.tab1.div2.oncontextmenu = e => {
-		log = e => console.log(e.target.innerText)
+	log = e => console.log(e.target.innerText)
 
-		app.popb.show(0, e, m => {
-				m.ichi.onclick =
-				m.ni.onclick =
-				m.san.onclick =
-				m.shi.onclick =
-				m.go.onclick = log
-		})
+	app.popb.show(0, e, m => {
+		m.ichi.onclick =
+		m.ni.onclick =
+		m.san.onclick =
+		m.shi.onclick =
+		m.go.onclick = log
+	})
 }
 
 app.tab1.div3.oncontextmenu = e => {
-		app.popc.show(0, e, m => {
-				if(!m.init){
-						m.init = true
+	app.popc.show(0, e, m => {
+		if(!m.init){
+			m.init = true
 
-						m.pmenu = function(){
-							this.selected = -1
+			m.pmenu = function(){
+				this.selected = -1
 
-							this.btn = function(a, b, c){
-								b = parseInt(b)
+				this.btn = function(a, b, c){
+					b = parseInt(b)
 
-								this.click = a.onclick = e => {
-									m.tab[c.selected = b].checked = this.r.checked = true
-								}
-							}
-						}
-
-						let s = '', t = ''
-
-
-						for(let i = 0; i < 2; i++){
-								s += '<button *a[]-btn="' + i + '" popstay>Вкладка ' + (i + 1) + '<input ^r type="radio" name="popc" hidden></button>'
-								t += '<div class="tab"><input ^tab[] type="radio" name="tabs2" hidden><div *tab' + i + ' fulw></div></div>'
-						}
-
-						m._.innerHTML ='<div *menu-pmenu class="menu">' + s + '</div>' + t
-						tokenize(m._, m)
-
-						m.menu.a[0].click()
-
-						el('Переключиться на Пример 3', m.tab0._, 'hsmoke pad10', 'button').onclick = app.menu.a[2].click
-
-						m.tab1._.innerHTML = '<label class="nyycheck" popstay><input ^check type="checkbox" popstay></label>'
-						tokenize(m.tab1._, m.tab1)
- 
-						m.tab1.check.onchange = e => {
-// не знаю, что придумать для примера
-						}
+					this.click = a.onclick = e => {
+						m.tab[c.selected = b].checked = this.r.checked = true
+					}
 				}
-		})
+			}
+
+			let s = '', t = ''
+
+
+			for(let i = 0; i < 2; i++){
+				s += '<button *a[]-btn="' + i + '" popstay>Вкладка ' + (i + 1) + '<input ^r type="radio" name="popc" hidden></button>'
+				t += '<div class="tab"><input ^tab[] type="radio" name="tabs2" hidden><div *tab' + i + ' fulw></div></div>'
+			}
+
+			m._.innerHTML ='<div *menu-pmenu class="menu">' + s + '</div>' + t
+			tokenize(m._, m)
+
+			m.menu.a[0].click()
+
+			el('Переключиться на Пример 3', m.tab0._, 'hsmoke pad10', 'button').onclick = app.menu.a[2].click
+
+			m.tab1._.innerHTML = '<label class="nyycheck" popstay><input ^check type="checkbox" popstay></label>'
+			tokenize(m.tab1._, m.tab1)
+
+			m.tab1.check.onchange = e => {
+// не знаю, что придумать для примера
+			}
+		}
+	})
 }
-				</script>
-		</body>
+		</script>
+	</body>
 </html>
