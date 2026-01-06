@@ -428,12 +428,9 @@ app.tab1.div3.oncontextmenu = e => {
 
 							this.btn = function(a, b, c){
 								b = parseInt(b)
-								const r = el(0, a, 0, 'input')
-								r.type = 'radio'
-								r.name = 'qwerty'
 
 								this.click = a.onclick = e => {
-									m.tab[c.selected = b].checked = r.checked = true
+									m.tab[c.selected = b].checked = this.r.checked = true
 								}
 							}
 						}
@@ -442,7 +439,7 @@ app.tab1.div3.oncontextmenu = e => {
 
 
 						for(let i = 0; i < 2; i++){
-								s += '<button *a[]-btn="' + i + '" popstay>Вкладка ' + (i + 1) + '</button>'
+								s += '<button *a[]-btn="' + i + '" popstay>Вкладка ' + (i + 1) + '<input ^r type="radio" name="popc" hidden></button>'
 								t += '<div class="tab"><input ^tab[] type="radio" name="tabs2" hidden><div *tab' + i + ' fulw></div></div>'
 						}
 
